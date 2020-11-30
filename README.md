@@ -38,11 +38,13 @@ environment):
 The unit of data passed between the upper layers and your protocol is a _message_ , which is
 declared as:
 
+```
 struct msg {
 
 char data[20];
 
 };
+```
 
 Your sending entity will thus receive data in 20-byte chunks from layer5; your receiving
 entity should deliver 20-byte chunks of correctly received data to layer5 at the receiving side.
@@ -50,6 +52,7 @@ entity should deliver 20-byte chunks of correctly received data to layer5 at the
 The unit of data passed between your routines and the network layer is the _packet_ , which is
 declared as:
 
+```
 struct pkt {
 
 int seqnum;
@@ -60,6 +63,8 @@ int checksum;
 char payload[20];
 
 };
+
+```
 
 Your routines will fill in the payload field from the message data passed down from layer5.
 The other packet fields will be used by your protocol to ensure reliable delivery.
