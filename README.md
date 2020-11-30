@@ -68,58 +68,64 @@ The routines you will write are detailed below. As noted above, such procedures 
 would be part of the operating system, and would be called by other procedures in the
 operating system.
 
-```
-* A_output(message) , where message is a structure of type msg, containing data to
+  
+
+#### A_output(message) , where message is a structure of type msg, containing data to
 be sent to the B-side. This routine will be called whenever the upper layer at the
 sending side (A) has a message to send. It is the job of your protocol to ensure that
 the data in such a message is delivered in-order, and correctly, to the receiving side
 upper layer.
-```
+  
 
-```
-* A_input(packet) , where packet is a structure of type pkt. This routine will be
+
+  
+
+#### A_input(packet) , where packet is a structure of type pkt. This routine will be
 called whenever a packet sent from B-side (i.e., as a result of a tolayer3() being
 done by a B-side procedure) arrives at the A-side. packet is the (possibly corrupted)
 packet sent from B-side.  
 
-* A_timerinterrupt() This routine will be called when A’s timer expires (thus
+#### A_timerinterrupt() This routine will be called when A’s timer expires (thus
 generating a timer interrupt). You’ll probably want to use this routine to control the
 retransmission of packets. See starttimer() and stoptimer() below for how
 the timer is started and stopped.
-* A_init() This routine will be called once, before any of your other A-side routines are
+#### A_init() This routine will be called once, before any of your other A-side routines are
 called. It can be used to do any required initialization.
-* B_input(packet) , where packet is a structure of type pkt. This routine will be
+#### B_input(packet) , where packet is a structure of type pkt. This routine will be
 called whenever a packet sent from the A-side (i.e., as a result of a tolayer3()
 being done by a A-side procedure) arrives at the B-side. packet is the (possibly
 corrupted) packet sent from A-side.
-* B_init() This routine will be called once, before any of your other B-side routines are
+#### B_init() This routine will be called once, before any of your other B-side routines are
 called. It can be used to do any required initialization.
-```
+  
+
 ## 3. Software Interfaces
 
 The procedures described above are the ones that you will write. However, the following
 procedures have already been written which can be called by your routines:
 
-```
-* starttimer(calling_entity,increment) , where calling_entity is either 0 (for
+  
+
+#### starttimer(calling_entity,increment) , where calling_entity is either 0 (for
 starting the A-side timer) or 1 (for starting the B-side timer), and increment is a
 float value indicating the amount of time that will pass before the timer interrupts.
 A’s timer should only be started (or stopped) by A-side routines, and similarly for the
 B-side timer. To give you an idea of the appropriate increment value to use: a packet
 sent into the network takes an average of 5 time units to arrive at the other side when
 there are no other messages in the medium.
-* stoptimer(calling_entity) , where calling_entity is either 0 (for stopping the A-
+#### stoptimer(calling_entity) , where calling_entity is either 0 (for stopping the A-
 side timer) or 1 (for stopping the B-side timer).
-* tolayer3(calling_entity,packet) , where calling_entity is either 0 (for the A-
+#### tolayer3(calling_entity,packet) , where calling_entity is either 0 (for the A-
 side send) or 1 (for the B-side send), and packet is a structure of type pkt. Calling
 this routine will cause the packet to be sent into the network, destined for the other
 entity.
-* tolayer5(calling_entity,message) , where calling_entity is either 0 (for the A-
+#### tolayer5(calling_entity,message) , where calling_entity is either 0 (for the A-
 side send) or 1 (for the B-side send), and message is a structure of type msg. With
 unidirectional data transfer, you would only be calling this with calling_entity
 equal to 1 (delivery to the B-side). Calling this routine will cause data to be passed to
 layer 5.
-```
+  
+
 
 ## 4. The Simulated Network Environment
 
@@ -131,26 +137,28 @@ The medium is capable of corrupting and losing packets. It will not reorder pack
 you compile your procedures and the given procedures together and run the resulting
 program, you will be asked to specify values regarding the simulated network environment:
 
-```
-* Number of messages to simulate: The emulator (and your routines) will stop after
+  
+
+#### Number of messages to simulate: The emulator (and your routines) will stop after
 this number of messages have been transmitted from entity (A) to entity (B).
-* Loss: You are asked to specify a packet loss probability. A values of 0.1 would mean
+#### Loss: You are asked to specify a packet loss probability. A values of 0.1 would mean
 that one in ten packets (on average) are lost.
-* Corruption: You are asked to specify a packet corruption probability. A value of 0.
+#### Corruption: You are asked to specify a packet corruption probability. A value of 0.
 would mean that one in five packets (on average) are corrupted. Note that the
 contents of payload, sequence, ack, or checksum fields can be corrupted. Your
 checksum should include the data, sequence, and ack fields.
-* Tracing: Setting a tracing value of 1 or 2 will print out useful information about what
+#### Tracing: Setting a tracing value of 1 or 2 will print out useful information about what
 is going on inside the emulation (e.g., what’s happening to packets and timers). A
 tracing values of 0 will turn this off. A tracing value greater than 2 will display all sorts
 of odd messages that are for my own emulator-debugging purposes. A tracing value
 of 2 may be helpful to you in debugging your code. You should keep in mind that real
 developers do not have underlying networks that provide such nice information
 about what is going to happen to their packets!
-* Average time between messages from sender’s layer5: You can set this value to
+#### Average time between messages from sender’s layer5: You can set this value to
 any non-zero positive value. Note that the smaller the value you choose, the faster
 packets will be arriving at your sender.
-```
+  
+
 ## 5. Implementation of Alternating-Bit-Protocol
 
 You are to write the procedures, A_output(), A_input(), A_timerinterrupt(),
@@ -171,14 +179,15 @@ passed to the A_output() routine.
 
 ## 6. Helpful Hints
 
-```
-* Checksumming: You can use whatever approach for checksumming you want.
+  
+
+#### Checksumming: You can use whatever approach for checksumming you want.
 Remember that the sequence number and ack field can also be corrupted. We would
 suggest a TCP-like checksum, which consists of the sum of the (integer) sequence and
 ack field values, added to a character-by-character sum of the payload field of the
 packet (i.e., treat each character as if it were an 8-bit integer and just add them
 together)
-* Note that any shared “state” among your routines needs to be in the form of global
+#### Note that any shared “state” among your routines needs to be in the form of global
 variables. Note also that any information that your procedures need to save from one
 invocation to the next must also be a global (or static) variable. For example, your
 routines will need to keep a copy of a packet for possible retransmission. It would
@@ -187,33 +196,40 @@ Note, however, that if one of your global variables is used by your sender side,
 variable should NOT be accessed by the receiving side entity, since in real life,
 communicating entities connected only by a communication channel cannot share
 global variables.
-* There is a float global variable called time that you can access from within your code
+#### There is a float global variable called time that you can access from within your code
 to help you out with your diagnostics messages.
-* START SIMPLE: Set the probabilities of loss and corruption to zero and test out your
+#### START SIMPLE: Set the probabilities of loss and corruption to zero and test out your
 routines. Better yet, design and implement your procedures for the case of no loss
 and no corruption, and get them working first. Then handle the case of one of these
 probabilities being non-zero, and then finally both being non-zero.
-* Debugging: We’d recommend that you set the tracing level to 2 and put lots of
+#### Debugging: We’d recommend that you set the tracing level to 2 and put lots of
 printf’s in your code while debugging your procedures.
-* Random Numbers: The emulator generates packet loss and errors using a random
+#### Random Numbers: The emulator generates packet loss and errors using a random
 number generator. Our past experience is that random number generators can vary
 widely from one machine to another. You may need to modify the random number
-```
+  
 
-```
+
+  
+
 generation code in the emulator we have supplied you. Our emulation routines have
 a test to see if the random number generator on your machine will work with our
 code. If you get an error message:
-```
-```
+  
+
+  
+
 It is likely that random number generation on your machine is different from
 what this emulator expects. Please take a look at the routine jimsrand() in
 the emulator code. Sorry.
-```
-```
+  
+
+  
+
 then you’ll know you’ll need to look at how random numbers are generated in the
 routine jimsrand(); see the comments in that routine.
-```
+  
+
 
 ## 7. Resources on Internet
 
@@ -235,7 +251,7 @@ https://media.pearsoncmg.com/aw/aw_kurose_network_3/labs/lab5/lab5.html
 
 ### Sample Output-
 
-
+```
 ----- Stop and Wait Network Simulator Version 1.1 --------
 
 Enter the number of messages to simulate: 10
@@ -903,3 +919,5 @@ Success Acknowledge received in A\_input
 Simulator terminated at time 18882.746094
 
 after sending 10 msgs from layer5
+
+```
